@@ -1,0 +1,17 @@
+D:\Full Stack Development Course\Console App\ConsoleApp1\obj\Debug\net10.0\ConsoleApp1.csproj.AssemblyReference.cache
+D:\Full Stack Development Course\Console App\ConsoleApp1\obj\Debug\net10.0\ConsoleApp1.GeneratedMSBuildEditorConfig.editorconfig
+D:\Full Stack Development Course\Console App\ConsoleApp1\obj\Debug\net10.0\ConsoleApp1.AssemblyInfoInputs.cache
+D:\Full Stack Development Course\Console App\ConsoleApp1\obj\Debug\net10.0\ConsoleApp1.AssemblyInfo.cs
+D:\Full Stack Development Course\Console App\ConsoleApp1\obj\Debug\net10.0\ConsoleApp1.csproj.CoreCompileInputs.cache
+D:\Full Stack Development Course\Console App\ConsoleApp1\bin\Debug\net10.0\ConsoleApp1.exe
+D:\Full Stack Development Course\Console App\ConsoleApp1\bin\Debug\net10.0\ConsoleApp1.deps.json
+D:\Full Stack Development Course\Console App\ConsoleApp1\bin\Debug\net10.0\ConsoleApp1.runtimeconfig.json
+D:\Full Stack Development Course\Console App\ConsoleApp1\bin\Debug\net10.0\ConsoleApp1.dll
+D:\Full Stack Development Course\Console App\ConsoleApp1\bin\Debug\net10.0\ConsoleApp1.pdb
+D:\Full Stack Development Course\Console App\ConsoleApp1\bin\Debug\net10.0\Pastel.dll
+D:\Full Stack Development Course\Console App\ConsoleApp1\obj\Debug\net10.0\ConsoleA.CB28C8CC.Up2Date
+D:\Full Stack Development Course\Console App\ConsoleApp1\obj\Debug\net10.0\ConsoleApp1.dll
+D:\Full Stack Development Course\Console App\ConsoleApp1\obj\Debug\net10.0\refint\ConsoleApp1.dll
+D:\Full Stack Development Course\Console App\ConsoleApp1\obj\Debug\net10.0\ConsoleApp1.pdb
+D:\Full Stack Development Course\Console App\ConsoleApp1\obj\Debug\net10.0\ConsoleApp1.genruntimeconfig.cache
+D:\Full Stack Development Course\Console App\ConsoleApp1\obj\Debug\net10.0\ref\ConsoleApp1.dll
