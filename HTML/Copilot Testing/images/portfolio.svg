@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="360" viewBox="0 0 600 360">
+  <rect width="100%" height="100%" fill="#f3f4f6" />
+  <rect x="24" y="24" width="552" height="64" fill="#134dcc" rx="6" />
+  <rect x="24" y="104" width="260" height="200" fill="#ffffff" stroke="#e5e7eb" />
+  <rect x="304" y="104" width="260" height="80" fill="#ffffff" stroke="#e5e7eb" />
+  <rect x="304" y="196" width="260" height="108" fill="#ffffff" stroke="#e5e7eb" />
+  <text x="44" y="68" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="#ffffff">Portfolio – Project List</text>
+</svg>
