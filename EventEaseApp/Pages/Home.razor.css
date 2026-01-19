@@ -1,0 +1,114 @@
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 64px 24px;
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    line-height: 1.2;
+}
+
+.hero-content p {
+    font-size: 18px;
+    margin: 0 0 32px 0;
+    line-height: 1.5;
+    opacity: 0.95;
+}
+
+.btn-primary {
+    padding: 14px 32px;
+    background: white;
+    color: #667eea;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.featured-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 64px 24px;
+}
+
+.featured-section h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: #333;
+}
+
+.section-subtitle {
+    font-size: 16px;
+    color: #666;
+    margin: 0 0 32px 0;
+}
+
+.featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.view-all-container {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-secondary {
+    padding: 12px 32px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 40px 16px;
+        margin-bottom: 32px;
+    }
+
+    .hero-content h1 {
+        font-size: 32px;
+    }
+
+    .hero-content p {
+        font-size: 16px;
+    }
+
+    .featured-section {
+        padding: 0 16px 40px 16px;
+    }
+
+    .featured-section h2 {
+        font-size: 24px;
+    }
+
+    .featured-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}

@@ -1,0 +1,148 @@
+@page "/user-profile"
+@using EventEaseApp.Models
+@using EventEaseApp.Services
+@inject UserSessionService SessionService
+@inject NavigationManager NavigationManager
+
+<PageTitle>User Profile - EventEase</PageTitle>
+
+<div class="profile-container">
+    <button class="btn-back" @onclick="GoBack">← Back</button>
+
+    <div class="profile-content">
+        <div class="profile-form-wrapper">
+            <h1>User Profile</h1>
+            <p class="form-subtitle">Manage your account information</p>
+
+            @if (showSuccessMessage)
+            {
+                <div class="alert alert-success">
+                    Profile updated successfully!
+                </div>
+            }
+
+            @if (isLoading)
+            {
+                <p>Loading profile...</p>
+            }
+            else
+            {
+                <EditForm Model="@userProfile" OnValidSubmit="HandleProfileUpdate">
+                    <DataAnnotationsValidator />
+
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <InputText id="firstName" @bind-Value="userProfile.FirstName" class="form-control" placeholder="Your first name" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <InputText id="lastName" @bind-Value="userProfile.LastName" class="form-control" placeholder="Your last name" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <InputText id="email" @bind-Value="userProfile.Email" class="form-control" placeholder="your.email@company.com" type="email" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <InputText id="phone" @bind-Value="userProfile.PhoneNumber" class="form-control" placeholder="+1 (555) 123-4567" />
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">Save Changes</button>
+                        <button type="button" class="btn-cancel" @onclick="GoBack">Cancel</button>
+                    </div>
+                </EditForm>
+            }
+        </div>
+
+        <div class="profile-sidebar">
+            <div class="account-summary">
+                <h3>Account Summary</h3>
+                
+                <div class="summary-item">
+                    <span class="summary-label">User ID</span>
+                    <span class="summary-value">@userProfile.Id.Substring(0, 8)...</span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="summary-label">Member Since</span>
+                    <span class="summary-value">@userProfile.CreatedAt.ToString("MMM dd, yyyy")</span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="summary-label">Total Registrations</span>
+                    <span class="summary-value">@registrationCount</span>
+                </div>
+
+                <div class="account-actions">
+                    <button class="btn-view-registrations" @onclick="ViewRegistrations">View My Registrations</button>
+                </div>
+            </div>
+
+            <div class="session-info">
+                <h3>Session Information</h3>
+                <p>Last Updated: <strong>@userProfile.LastUpdated.ToString("MMM dd, yyyy hh:mm tt")</strong></p>
+                <button class="btn-logout" @onclick="HandleLogout">Logout</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private UserSession userProfile = new();
+    private bool isLoading = true;
+    private bool showSuccessMessage = false;
+    private int registrationCount = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProfile();
+    }
+
+    private async Task LoadProfile()
+    {
+        isLoading = true;
+        var currentUser = await SessionService.GetCurrentUserAsync();
+        
+        if (currentUser != null)
+        {
+            userProfile = currentUser;
+        }
+
+        registrationCount = await SessionService.GetUserRegistrationCountAsync();
+        isLoading = false;
+    }
+
+    private async Task HandleProfileUpdate()
+    {
+        await SessionService.UpdateUserProfileAsync(
+            userProfile.FirstName,
+            userProfile.LastName,
+            userProfile.Email,
+            userProfile.PhoneNumber
+        );
+
+        showSuccessMessage = true;
+        await Task.Delay(3000);
+        showSuccessMessage = false;
+    }
+
+    private void ViewRegistrations()
+    {
+        NavigationManager.NavigateTo("/my-registrations");
+    }
+
+    private async Task HandleLogout()
+    {
+        await SessionService.ClearUserSessionAsync();
+        NavigationManager.NavigateTo("/");
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

@@ -1,0 +1,92 @@
+﻿@page "/"
+@using EventEaseApp.Models
+@using EventEaseApp.Components
+@using Microsoft.AspNetCore.Components.Web
+@inject NavigationManager NavigationManager
+
+<PageTitle>Home - EventEase</PageTitle>
+
+<div class="hero-section">
+    <div class="hero-content">
+        <h1>Welcome to EventEase</h1>
+        <p>Discover, manage, and attend amazing corporate and social events</p>
+        <button class="btn-primary" @onclick="BrowseEvents">
+            Browse All Events
+        </button>
+    </div>
+</div>
+
+<div class="featured-section">
+    <h2>Featured Events</h2>
+    <p class="section-subtitle">Check out our latest upcoming events</p>
+    
+    <div class="featured-grid">
+        @foreach (var evt in featuredEvents.Take(3))
+        {
+            <EventCard Event="evt" OnViewDetails="HandleViewDetails"></EventCard>
+        }
+    </div>
+
+    <div class="view-all-container">
+        <button class="btn-secondary" @onclick="BrowseEvents">
+            View All Events
+        </button>
+    </div>
+</div>
+
+@code {
+    private List<Event> featuredEvents = new();
+
+    protected override void OnInitialized()
+    {
+        featuredEvents = new List<Event>
+        {
+            new Event
+            {
+                Id = 1,
+                Name = "Annual Team Building Retreat",
+                Description = "Join us for a day of fun activities and team bonding.",
+                Date = new DateTime(2026, 2, 15),
+                Location = "Mountain Resort, Colorado",
+                Category = "Corporate",
+                Capacity = 100,
+                RegisteredAttendees = 75,
+                ImageUrl = "https://via.placeholder.com/400x200/667eea/ffffff?text=Team+Building"
+            },
+            new Event
+            {
+                Id = 2,
+                Name = "Tech Conference 2026",
+                Description = "Latest trends in technology and innovation.",
+                Date = new DateTime(2026, 3, 10),
+                Location = "Convention Center, San Francisco",
+                Category = "Technology",
+                Capacity = 500,
+                RegisteredAttendees = 450,
+                ImageUrl = "https://via.placeholder.com/400x200/764ba2/ffffff?text=Tech+Conference"
+            },
+            new Event
+            {
+                Id = 3,
+                Name = "Networking Gala Evening",
+                Description = "An elegant evening to network with industry professionals.",
+                Date = new DateTime(2026, 2, 28),
+                Location = "Grand Ballroom, New York",
+                Category = "Networking",
+                Capacity = 200,
+                RegisteredAttendees = 120,
+                ImageUrl = "https://via.placeholder.com/400x200/f093fb/ffffff?text=Gala+Evening"
+            }
+        };
+    }
+
+    private void HandleViewDetails(int eventId)
+    {
+        NavigationManager.NavigateTo($"/event-details/{eventId}");
+    }
+
+    private void BrowseEvents()
+    {
+        NavigationManager.NavigateTo("/events");
+    }
+}

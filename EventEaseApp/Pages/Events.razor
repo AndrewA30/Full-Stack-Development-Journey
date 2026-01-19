@@ -1,0 +1,82 @@
+@page "/events"
+@using EventEaseApp.Models
+@inject NavigationManager NavigationManager
+
+<PageTitle>Events - EventEase</PageTitle>
+
+<div class="events-container">
+    <h1>Upcoming Events</h1>
+    <p class="subtitle">Discover and register for exciting corporate and social events</p>
+
+    <div class="events-grid">
+        @foreach (var evt in events)
+        {
+            <EventCard Event="evt" OnViewDetails="HandleViewDetails"></EventCard>
+        }
+    </div>
+</div>
+
+@code {
+    private List<Event> events = new();
+
+    protected override void OnInitialized()
+    {
+        // Sample event data
+        events = new List<Event>
+        {
+            new Event
+            {
+                Id = 1,
+                Name = "Annual Team Building Retreat",
+                Description = "Join us for a day of fun activities and team bonding.",
+                Date = new DateTime(2026, 2, 15),
+                Location = "Mountain Resort, Colorado",
+                Category = "Corporate",
+                Capacity = 100,
+                RegisteredAttendees = 75,
+                ImageUrl = "https://via.placeholder.com/400x200/667eea/ffffff?text=Team+Building"
+            },
+            new Event
+            {
+                Id = 2,
+                Name = "Tech Conference 2026",
+                Description = "Latest trends in technology and innovation.",
+                Date = new DateTime(2026, 3, 10),
+                Location = "Convention Center, San Francisco",
+                Category = "Technology",
+                Capacity = 500,
+                RegisteredAttendees = 450,
+                ImageUrl = "https://via.placeholder.com/400x200/764ba2/ffffff?text=Tech+Conference"
+            },
+            new Event
+            {
+                Id = 3,
+                Name = "Networking Gala Evening",
+                Description = "An elegant evening to network with industry professionals.",
+                Date = new DateTime(2026, 2, 28),
+                Location = "Grand Ballroom, New York",
+                Category = "Networking",
+                Capacity = 200,
+                RegisteredAttendees = 120,
+                ImageUrl = "https://via.placeholder.com/400x200/f093fb/ffffff?text=Gala+Evening"
+            },
+            new Event
+            {
+                Id = 4,
+                Name = "Workshop: Advanced C# Development",
+                Description = "Deep dive into advanced C# concepts and best practices.",
+                Date = new DateTime(2026, 2, 20),
+                Location = "Tech Hub, Seattle",
+                Category = "Workshop",
+                Capacity = 50,
+                RegisteredAttendees = 48,
+                ImageUrl = "https://via.placeholder.com/400x200/4facfe/ffffff?text=C%23+Workshop"
+            }
+        };
+    }
+
+    private void HandleViewDetails(int eventId)
+    {
+        NavigationManager.NavigateTo($"/event-details/{eventId}");
+    }
+}

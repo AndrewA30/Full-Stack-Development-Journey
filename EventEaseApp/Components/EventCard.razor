@@ -1,0 +1,44 @@
+@using EventEaseApp.Models
+
+<div class="event-card">
+    <div class="event-image">
+        <img src="@Event.ImageUrl" alt="@Event.Name" />
+        <span class="category-badge">@Event.Category</span>
+    </div>
+    <div class="event-content">
+        <h3 class="event-title">@Event.Name</h3>
+        <p class="event-description">@Event.Description</p>
+        
+        <div class="event-details">
+            <div class="detail-item">
+                <span class="detail-icon">📅</span>
+                <span class="detail-text">@Event.Date.ToString("MMM dd, yyyy")</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-icon">📍</span>
+                <span class="detail-text">@Event.Location</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-icon">👥</span>
+                <span class="detail-text">@Event.RegisteredAttendees/@Event.Capacity Registered</span>
+            </div>
+        </div>
+        
+        <button class="btn-view-details" @onclick="HandleViewDetails">
+            View Details
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Event Event { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<int> OnViewDetails { get; set; }
+
+    private async Task HandleViewDetails()
+    {
+        await OnViewDetails.InvokeAsync(Event.Id);
+    }
+}

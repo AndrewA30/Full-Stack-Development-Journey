@@ -1,0 +1,40 @@
+.events-container {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.events-container h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.subtitle {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 32px;
+    line-height: 1.5;
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+@media (max-width: 768px) {
+    .events-container {
+        padding: 16px;
+    }
+
+    .events-container h1 {
+        font-size: 24px;
+    }
+
+    .events-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}

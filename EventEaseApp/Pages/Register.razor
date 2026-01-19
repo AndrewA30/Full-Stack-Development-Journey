@@ -1,0 +1,183 @@
+@page "/register/{EventId:int}"
+@using EventEaseApp.Models
+@using EventEaseApp.Services
+@inject NavigationManager NavigationManager
+@inject UserSessionService SessionService
+
+<PageTitle>Register for Event - EventEase</PageTitle>
+
+<div class="registration-container">
+    <button class="btn-back" @onclick="GoBack">← Back</button>
+
+    <div class="registration-content">
+        <div class="registration-form-wrapper">
+            <h1>Event Registration</h1>
+            <p class="form-subtitle">@eventName</p>
+
+            @if (showValidationError)
+            {
+                <div class="alert alert-error">
+                    Please fill in all required fields correctly.
+                </div>
+            }
+
+            <EditForm Model="@registration" OnValidSubmit="HandleRegistration">
+                <DataAnnotationsValidator />
+
+                <div class="form-group">
+                    <label for="firstName">First Name *</label>
+                    <InputText id="firstName" @bind-Value="registration.FirstName" class="form-control" placeholder="Enter your first name" />
+                    <ValidationMessage For="@(() => registration.FirstName)" />
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name *</label>
+                    <InputText id="lastName" @bind-Value="registration.LastName" class="form-control" placeholder="Enter your last name" />
+                    <ValidationMessage For="@(() => registration.LastName)" />
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <InputText id="email" @bind-Value="registration.Email" class="form-control" placeholder="your.email@company.com" type="email" />
+                    <ValidationMessage For="@(() => registration.Email)" />
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <InputText id="phone" @bind-Value="registration.PhoneNumber" class="form-control" placeholder="+1 (555) 123-4567" />
+                    <ValidationMessage For="@(() => registration.PhoneNumber)" />
+                </div>
+
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <InputText id="company" @bind-Value="registration.Company" class="form-control" placeholder="Your company name" />
+                </div>
+
+                <div class="form-group">
+                    <label for="jobTitle">Job Title</label>
+                    <InputText id="jobTitle" @bind-Value="registration.JobTitle" class="form-control" placeholder="Your job title" />
+                </div>
+
+                <div class="form-group">
+                    <label for="requirements">Special Requirements</label>
+                    <InputTextArea id="requirements" @bind-Value="registration.SpecialRequirements" class="form-control" placeholder="Dietary restrictions, accessibility needs, etc." rows="4" />
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">Complete Registration</button>
+                    <button type="button" class="btn-cancel" @onclick="GoBack">Cancel</button>
+                </div>
+            </EditForm>
+        </div>
+
+        <div class="registration-sidebar">
+            <div class="event-summary">
+                <h3>Event Summary</h3>
+                <div class="summary-item">
+                    <span class="summary-label">Event</span>
+                    <span class="summary-value">@eventName</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Date</span>
+                    <span class="summary-value">@eventDate</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Location</span>
+                    <span class="summary-value">@eventLocation</span>
+                </div>
+                <p class="summary-note">You will receive a confirmation email after registration.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    private EventRegistration registration = new();
+    private string eventName = "";
+    private string eventDate = "";
+    private string eventLocation = "";
+    private bool showValidationError = false;
+
+    protected override void OnInitialized()
+    {
+        registration.EventId = EventId;
+
+        // Get event details from mock data
+        var events = new List<Event>
+        {
+            new Event
+            {
+                Id = 1,
+                Name = "Annual Team Building Retreat",
+                Date = new DateTime(2026, 2, 15),
+                Location = "Mountain Resort, Colorado"
+            },
+            new Event
+            {
+                Id = 2,
+                Name = "Tech Conference 2026",
+                Date = new DateTime(2026, 3, 10),
+                Location = "Convention Center, San Francisco"
+            },
+            new Event
+            {
+                Id = 3,
+                Name = "Networking Gala Evening",
+                Date = new DateTime(2026, 2, 28),
+                Location = "Grand Ballroom, New York"
+            },
+            new Event
+            {
+                Id = 4,
+                Name = "Workshop: Advanced C# Development",
+                Date = new DateTime(2026, 2, 20),
+                Location = "Tech Hub, Seattle"
+            }
+        };
+
+        var selectedEvent = events.FirstOrDefault(e => e.Id == EventId);
+        if (selectedEvent != null)
+        {
+            eventName = selectedEvent.Name;
+            eventDate = selectedEvent.Date.ToString("MMMM dd, yyyy");
+            eventLocation = selectedEvent.Location;
+        }
+    }
+
+    private async Task HandleRegistration()
+    {
+        if (string.IsNullOrWhiteSpace(registration.FirstName) ||
+            string.IsNullOrWhiteSpace(registration.LastName) ||
+            string.IsNullOrWhiteSpace(registration.Email) ||
+            string.IsNullOrWhiteSpace(registration.PhoneNumber))
+        {
+            showValidationError = true;
+            return;
+        }
+
+        // Save user session
+        var userSession = new UserSession
+        {
+            FirstName = registration.FirstName,
+            LastName = registration.LastName,
+            Email = registration.Email,
+            PhoneNumber = registration.PhoneNumber
+        };
+        
+        await SessionService.SaveUserSessionAsync(userSession);
+
+        // Add registration to session storage
+        registration.RegistrationDate = DateTime.Now;
+        await SessionService.AddRegistrationAsync(registration);
+
+        NavigationManager.NavigateTo($"/registration-confirmation/{EventId}?firstName={Uri.EscapeDataString(registration.FirstName)}&lastName={Uri.EscapeDataString(registration.LastName)}&email={Uri.EscapeDataString(registration.Email)}");
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo($"/event-details/{EventId}");
+    }
+}

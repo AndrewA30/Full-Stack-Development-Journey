@@ -1,0 +1,213 @@
+@page "/my-registrations"
+@using EventEaseApp.Models
+@using EventEaseApp.Services
+@inject UserSessionService SessionService
+@inject NavigationManager NavigationManager
+
+<PageTitle>My Registrations - EventEase</PageTitle>
+
+<div class="my-registrations-container">
+    <button class="btn-back" @onclick="GoBack">← Back</button>
+
+    <div class="registrations-header">
+        <h1>My Event Registrations</h1>
+        <p class="subtitle">Track and manage your registered events</p>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="loading">
+            <p>Loading your registrations...</p>
+        </div>
+    }
+    else if (registrations.Count == 0)
+    {
+        <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <h2>No Registrations Yet</h2>
+            <p>You haven't registered for any events yet.</p>
+            <button class="btn-primary" @onclick="BrowseEvents">Browse Events</button>
+        </div>
+    }
+    else
+    {
+        <div class="registrations-stats">
+            <div class="stat-card">
+                <span class="stat-number">@registrations.Count</span>
+                <span class="stat-label">Events Registered</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">@upcomingCount</span>
+                <span class="stat-label">Upcoming Events</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">@pastCount</span>
+                <span class="stat-label">Past Events</span>
+            </div>
+        </div>
+
+        <div class="registrations-list">
+            <h2>Upcoming Events</h2>
+            @if (upcomingRegistrations.Count > 0)
+            {
+                <div class="events-grid">
+                    @foreach (var registration in upcomingRegistrations)
+                    {
+                        var eventInfo = GetEventInfo(registration.EventId);
+                        <div class="registration-card">
+                            <div class="card-header">
+                                <h3>@eventInfo?.Name</h3>
+                                <span class="registration-badge">Registered</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="info-row">
+                                    <span class="info-icon">📅</span>
+                                    <span>@eventInfo?.Date.ToString("MMMM dd, yyyy")</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-icon">📍</span>
+                                    <span>@eventInfo?.Location</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-icon">🆔</span>
+                                    <span>REG-@registration.Id.ToString("D4")</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn-view" @onclick="() => ViewEventDetails(registration.EventId)">View Event</button>
+                                <button class="btn-remove" @onclick="() => CancelRegistration(registration.Id)">Cancel</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="empty-message">No upcoming events</p>
+            }
+        </div>
+
+        @if (pastRegistrations.Count > 0)
+        {
+            <div class="registrations-list">
+                <h2>Past Events</h2>
+                <div class="events-grid">
+                    @foreach (var registration in pastRegistrations)
+                    {
+                        var eventInfo = GetEventInfo(registration.EventId);
+                        <div class="registration-card past">
+                            <div class="card-header">
+                                <h3>@eventInfo?.Name</h3>
+                                <span class="registration-badge completed">Completed</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="info-row">
+                                    <span class="info-icon">📅</span>
+                                    <span>@eventInfo?.Date.ToString("MMMM dd, yyyy")</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-icon">📍</span>
+                                    <span>@eventInfo?.Location</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn-view" @onclick="() => ViewEventDetails(registration.EventId)">View Event</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private List<EventRegistration> registrations = new();
+    private List<EventRegistration> upcomingRegistrations = new();
+    private List<EventRegistration> pastRegistrations = new();
+    private bool isLoading = true;
+
+    private int upcomingCount => upcomingRegistrations.Count;
+    private int pastCount => pastRegistrations.Count;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRegistrations();
+    }
+
+    private async Task LoadRegistrations()
+    {
+        isLoading = true;
+        registrations = await SessionService.GetUserRegistrationsAsync();
+        
+        upcomingRegistrations = registrations
+            .Where(r => GetEventInfo(r.EventId)?.Date > DateTime.Now)
+            .OrderBy(r => GetEventInfo(r.EventId)?.Date)
+            .ToList();
+
+        pastRegistrations = registrations
+            .Where(r => GetEventInfo(r.EventId)?.Date <= DateTime.Now)
+            .OrderByDescending(r => GetEventInfo(r.EventId)?.Date)
+            .ToList();
+
+        isLoading = false;
+    }
+
+    private Event? GetEventInfo(int eventId)
+    {
+        var allEvents = new List<Event>
+        {
+            new Event
+            {
+                Id = 1,
+                Name = "Annual Team Building Retreat",
+                Date = new DateTime(2026, 2, 15),
+                Location = "Mountain Resort, Colorado"
+            },
+            new Event
+            {
+                Id = 2,
+                Name = "Tech Conference 2026",
+                Date = new DateTime(2026, 3, 10),
+                Location = "Convention Center, San Francisco"
+            },
+            new Event
+            {
+                Id = 3,
+                Name = "Networking Gala Evening",
+                Date = new DateTime(2026, 2, 28),
+                Location = "Grand Ballroom, New York"
+            },
+            new Event
+            {
+                Id = 4,
+                Name = "Workshop: Advanced C# Development",
+                Date = new DateTime(2026, 2, 20),
+                Location = "Tech Hub, Seattle"
+            }
+        };
+
+        return allEvents.FirstOrDefault(e => e.Id == eventId);
+    }
+
+    private void ViewEventDetails(int eventId)
+    {
+        NavigationManager.NavigateTo($"/event-details/{eventId}");
+    }
+
+    private async Task CancelRegistration(int registrationId)
+    {
+        registrations.RemoveAll(r => r.Id == registrationId);
+        await LoadRegistrations();
+    }
+
+    private void BrowseEvents()
+    {
+        NavigationManager.NavigateTo("/events");
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
