@@ -1,3 +1,4 @@
 Useful Shortcut
 CTRL + I = Call AI to generate code
 CTRL + Shift + P = open palette
+CTRL + , = Setting in vscode
