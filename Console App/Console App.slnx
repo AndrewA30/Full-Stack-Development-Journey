@@ -1,4 +1,9 @@
 <Solution>
+  <Project Path="../CRUD API/CRUD API.csproj" />
+  <Project Path="../Deserialization/Deserialization.csproj" />
+  <Project Path="../Middleware Configuration/Middleware Configuration.csproj" />
+  <Project Path="../Serialization/Serialization.csproj" />
+  <Project Path="../UserManagementAPI/UserManagementAPI.csproj" />
   <Project Path="BasicApiEndpoints/BasicApiEndpoints.csproj" />
   <Project Path="ConsoleApp1/ConsoleApp1.csproj" />
   <Project Path="ConsoleApp2/ConsoleApp2.csproj" />
